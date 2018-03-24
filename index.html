@@ -1,0 +1,55 @@
+<!doctype html>
+<html>
+  <head>
+    <style>
+
+     body {
+       font-family: "Helvetica", Times, serif;
+       color: DimGrey;
+       padding: 70px 0;
+       background-color: powderblue;
+       text-align: center;
+     }
+
+    </style>
+    <title>Product Search!</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+  </head>
+
+  <body>
+    <img src="https://storage.googleapis.com/greg-brown-gcp/gcplogo2.png" />
+    <h1>Product Search!</h1>
+    <div>
+        <select class="js-data-example-ajax" style="width:700px;"></select>
+    </div>
+<script>
+  $(".js-data-example-ajax").select2({  //https://select2.org/data-sources/ajax
+    ajax: {
+      delay: 250,
+      url: '/suggest',
+      dataType: 'json',
+      minimumInputLength: 1,
+      data: function (params) {
+        return {
+          q: params.term, // search term
+        };
+      },
+      // transform the data returned by suggest into the format expected by Select2
+      processResults: function (data, params) {
+        params.page = params.page || 1;
+        return {
+          results: data.items,
+          pagination: {
+            more: (params.page * 30) < data.total_count
+          }
+        };
+      },
+      cache: true,
+    },
+    minimumInputLength: 1,
+  });
+</script>
+</body>
+</html>
