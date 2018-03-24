@@ -1,0 +1,11 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: es-autocomplete-service
+spec:
+  selector:
+    app: es-autocomplete
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 3000
