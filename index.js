@@ -2,6 +2,11 @@ const app = require('express')();
 const http = require('http').Server(app);
 const search = require('./search');
 
+
+if (process.env.NODE_ENV !== 'production') {
+  require('dotenv').load();
+}
+
 app.get('/', (req, res) => {
   res.sendFile(`${__dirname}/index.html`);
 });

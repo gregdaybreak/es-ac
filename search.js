@@ -1,16 +1,22 @@
 const elasticsearch = require('elasticsearch');
 const jsontransform = require('node-json-transform');
 
+//allows usage of dotenv in non prod. We will use secrets in k8s for env vars
+if (process.env.NODE_ENV !== 'production') {
+  require('dotenv').load();
+}
+
+
 const client = new elasticsearch.Client({
   hosts: [
     {
-      host: '35.230.116.42'
+      host: process.env.ES1
     },
     {
-      host: '35.230.13.33'
+      host: process.env.ES2
     },
     {
-      host: '35.230.80.36'
+      host: process.env.ES3
     }
 ]});
 
