@@ -1,0 +1,14 @@
+apiVersion: extensions/v1beta1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: es-autocomplete-hpa
+  namespace: default
+spec:
+  scaleRef:
+    kind: Deployment
+    name: es-autocomplete-deployment
+    namespace: default
+  minReplicas: 3
+  maxReplicas: 6
+  cpuUtilization:
+    targetPercentage: 70
