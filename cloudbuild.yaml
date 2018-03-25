@@ -1,0 +1,30 @@
+steps:
+
+- id: Building es-autocomplete Container
+  name: 'gcr.io/cloud-builders/docker'
+  args: [ 'build', '-t', 'us.gcr.io/avian-compiler-198804/es-autocomplete', '.' ]
+
+- id: Tagging es-autocomplete Container
+- name: 'gcr.io/cloud-builders/docker'
+  args: [ 'tag', 'us.gcr.io/avian-compiler-198804/es-autocomplete', 'us.gcr.io/avian-compiler-198804/es-autocomplete:$BRANCH_NAME-$REVISION_ID']
+  waitFor:
+    - Building es-autocomplete Container
+
+# push the image to the repo
+- id: Push Image to Repo
+  name: 'gcr.io/cloud-builders/docker'
+  args: ["push", "us.gcr.io/avian-compiler-198804/es-autocomplete:$BRANCH_NAME-$REVISION_ID"]
+  waitFor:
+    - Tagging es-autocomplete Container
+
+- id: Deploy to Kubernetes
+  name: 'gcr.io/cloud-builders/kubectl'
+  args: ['set', 'image', 'deployment/es-autocomplete-deployment', 'es-autocomplete=us.gcr.io/avian-compiler-198804/es-autocomplete:$BRANCH_NAME-$REVISION_ID']
+  env:
+  - 'CLOUDSDK_COMPUTE_REGION=us-west1'
+  - 'CLOUDSDK_CONTAINER_CLUSTER=cluster-1'
+
+#image update steps(two tags: latest and branch-revision)
+images:
+- 'us.gcr.io/avian-compiler-198804/es-autocomplete'
+- 'us.gcr.io/avian-compiler-198804/es-autocomplete:$BRANCH_NAME-$REVISION_ID'
